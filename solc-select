@@ -22,7 +22,10 @@ SOLC_PATH=$SOLC_INSTALL_DIR/solc-v$VERSION
 
 if [ ! -f $SOLC_PATH ]; then
     echo "Error: ${SOLC_PATH} does not exist!"
-    echo "Run `$0 --list` to see a list of installed versions."
+    echo ""
+    echo "Please select one of the installed versions:"
+    echo ""
+    echo `$0 --list`
     exit 1
 fi
 
