@@ -27,3 +27,5 @@ https://github.com/trailofbits/slither
 https://github.com/trailofbits/rattle
 https://github.com/trailofbits/not-so-smart-contracts
 
+Use `solc-select` to switch between different versions of `solc`
+
