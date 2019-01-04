@@ -5,12 +5,12 @@ USER root
 
 # Remove the version of solc installed by Etheno
 RUN apt-get -y remove solc
+# Install all versions of solc
 COPY install_solc.sh /
 RUN bash /install_solc.sh
 RUN rm /install_solc.sh
-
-# Install all versions of solc
-
+# Install the solc-selection script:
+COPY solc-select /usr/bin/
 
 WORKDIR /home
 
@@ -23,6 +23,9 @@ USER ethsec
 WORKDIR /home/ethsec
 ENV HOME="/home/ethsec"
 ENV PATH="${PATH}:${HOME}/.local/bin"
+
+# Select the latest version of solc as the default:
+RUN solc-select --list | tail -n1 | xargs solc-select
 
 RUN mv examples etheno-examples
 
