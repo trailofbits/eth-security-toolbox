@@ -3,6 +3,15 @@ MAINTAINER Evan Sultanik
 
 USER root
 
+# Remove the version of solc installed by Etheno
+RUN apt-get -y remove solc
+COPY install_solc.sh /
+RUN bash /install_solc.sh
+RUN rm /install_solc.sh
+
+# Install all versions of solc
+
+
 WORKDIR /home
 
 RUN usermod -l ethsec etheno
