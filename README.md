@@ -9,6 +9,8 @@ This repository contains scripts to create a Docker container preinstalled and p
 * [Rattle](https://github.com/trailofbits/rattle) EVM lifter
 * [Not So Smart Contracts](https://github.com/trailofbits/not-so-smart-contracts) repository
 
+Note that all of the tools _except_ for Echidna are the latest possible release. Echidna is currently taken from its `dev-no-hedgehog` branch, which is required for Etheno. Once this branch is merged into Echidna master, this will no longer be the case.
+
 ## Quickstart
 
 Use our prebuilt Docker container to quickly install and run the toolkit:
