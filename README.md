@@ -35,6 +35,17 @@ Simply start an instance of the Docker container:
 docker run -it eth-security-toolbox
 ```
 
+As many versions of Solidity as possible are installed. They can be individually executed as `solc-v0.4.18` or `solc-v0.5.2`. By default, `solc` (with no version suffix) corresponds to the latest release. This can be changed using the `solc-select` script:
+```
+$ solc --version
+solc, the solidity compiler commandline interface
+Version: 0.5.2+commit.1df8f40c.Linux.g++
+$ solc-select 0.4.24
+$ solc --version
+solc, the solidity compiler commandline interface
+Version: 0.4.24+commit.e67f0147.Linux.g++
+```
+
 ## Getting Help
 
 Feel free to stop by our [Slack channel](https://empirehacking.slack.com/) for help on using or extending this toolbox.
