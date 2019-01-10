@@ -35,6 +35,17 @@ RUN git clone https://github.com/trailofbits/not-so-smart-contracts.git
 
 RUN git clone https://github.com/trailofbits/rattle.git
 
+RUN mkdir .workshops
+WORKDIR /home/ethsec/.workshops
+RUN git init
+RUN git remote add origin https://github.com/trailofbits/publications.git
+RUN git fetch origin
+RUN git checkout origin/master -- workshops
+RUN mv workshops ../
+RUN rm -rf .workshops
+
+WORKDIR /home/ethsec
+
 USER root
 COPY motd /etc/motd
 RUN echo '\ncat /etc/motd\n' >> /etc/bash.bashrc
