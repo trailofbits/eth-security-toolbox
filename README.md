@@ -32,7 +32,7 @@ $ docker build -t eth-security-toolbox .
 
 Simply start an instance of the Docker container:
 ```
-docker run -it eth-security-toolbox
+docker run -it trailofbits/eth-security-toolbox
 ```
 
 As many versions of Solidity as possible are installed. They can be individually executed as `solc-v0.4.18` or `solc-v0.5.2`. By default, `solc` (with no version suffix) corresponds to the latest release. This can be changed using the `solc-select` script:
