@@ -29,7 +29,16 @@ RUN solc-select --list | tail -n1 | xargs solc-select
 
 RUN mv examples etheno-examples
 
-RUN pip3 install slither-analyzer pyevmasm 
+RUN pip3 install slither-analyzer pyevmasm
+# Slither now requires npx
+# Also install Embark while we are at it
+USER root
+RUN npm -g install npx
+RUN npm -g install embark
+RUN npm -g install @trailofbits/embark-contract-info
+RUN npm -g install n
+RUN n stable
+USER ethsec
 
 RUN git clone https://github.com/trailofbits/not-so-smart-contracts.git
 
