@@ -33,6 +33,7 @@ RUN pip3 install slither-analyzer pyevmasm
 # Slither now requires npx
 # Also install Embark while we are at it
 USER root
+RUN apt-get -y install npm
 RUN npm -g install npx
 RUN npm -g install embark
 RUN npm -g install @trailofbits/embark-contract-info
