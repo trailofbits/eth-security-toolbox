@@ -39,6 +39,10 @@ RUN npm -g install embark
 RUN npm -g install @trailofbits/embark-contract-info
 RUN npm -g install n
 RUN n stable
+
+# ethsec needs access to .npm in order to do `npm install`
+RUN chown -R ethsec:ethsec /home/ethsec/.npm
+
 USER ethsec
 
 RUN git clone https://github.com/trailofbits/not-so-smart-contracts.git
