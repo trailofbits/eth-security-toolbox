@@ -7,8 +7,7 @@ USER root
 RUN apt-get -y remove solc
 # Install all versions of solc
 COPY install_solc.sh /
-RUN bash /install_solc.sh
-RUN rm /install_solc.sh
+RUN bash /install_solc.sh && rm /install_solc.sh
 # Install the solc-selection script:
 COPY solc-select /usr/bin/
 
@@ -45,20 +44,12 @@ RUN chown -R ethsec:ethsec /home/ethsec/.npm
 
 USER ethsec
 
-RUN git clone https://github.com/trailofbits/not-so-smart-contracts.git
+RUN git clone --depth 1 https://github.com/trailofbits/not-so-smart-contracts.git && \
+    git clone --depth 1 https://github.com/trailofbits/rattle.git && \
+    git clone --depth 1 https://github.com/trailofbits/publications.git && \
+    mv publications/workshops . && \
+    rm -rf publications
 
-RUN git clone https://github.com/trailofbits/rattle.git
-
-RUN mkdir .workshops
-WORKDIR /home/ethsec/.workshops
-RUN git init
-RUN git remote add origin https://github.com/trailofbits/publications.git
-RUN git fetch origin
-RUN git checkout origin/master -- workshops
-RUN mv workshops ../
-RUN rm -rf .workshops
-
-WORKDIR /home/ethsec
 
 USER root
 COPY motd /etc/motd
