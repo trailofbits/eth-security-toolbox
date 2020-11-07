@@ -30,6 +30,10 @@ RUN groupmod --new-name ethsec etheno
 RUN usermod -d /home/ethsec -m ethsec
 RUN sed -i 's/etheno/ethsec/g' /etc/sudoers
 
+RUN add-apt-repository ppa:sri-csl/formal-methods -y
+RUN apt-get update
+RUN apt-get install yices2
+
 USER ethsec
 WORKDIR /home/ethsec
 ENV HOME="/home/ethsec"
@@ -44,9 +48,9 @@ RUN pip3 --no-cache-dir install slither-analyzer pyevmasm
 
 RUN git clone --depth 1 https://github.com/trailofbits/not-so-smart-contracts.git && \
     git clone --depth 1 https://github.com/trailofbits/rattle.git && \
-    git clone --depth 1 https://github.com/trailofbits/publications.git && \
-    mv publications/workshops . && \
-    rm -rf publications
+    git clone --depth 1 https://github.com/crytic/building-secure-contracts
+
+
 
 
 USER root
