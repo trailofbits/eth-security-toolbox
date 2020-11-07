@@ -32,7 +32,7 @@ RUN sed -i 's/etheno/ethsec/g' /etc/sudoers
 
 RUN add-apt-repository ppa:sri-csl/formal-methods -y
 RUN apt-get update
-RUN apt-get install yices2
+RUN apt-get install yices2 -y
 
 USER ethsec
 WORKDIR /home/ethsec
@@ -45,6 +45,7 @@ RUN solc-select --list | tail -n1 | xargs solc-select
 RUN mv examples etheno-examples
 
 RUN pip3 --no-cache-dir install slither-analyzer pyevmasm
+RUN pip3 --no-cache-dir install --upgrade manticore
 
 RUN git clone --depth 1 https://github.com/trailofbits/not-so-smart-contracts.git && \
     git clone --depth 1 https://github.com/trailofbits/rattle.git && \
