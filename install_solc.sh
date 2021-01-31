@@ -6,7 +6,7 @@ function install_solc {
 }
 
 function solc_releases {
-  curl --silent "https://api.github.com/repos/ethereum/solidity/releases" |
+  curl --silent "https://api.github.com/repos/ethereum/solidity/releases?per_page=100" |
     grep '"tag_name":' |
     sed -E 's/.*"([^"]+)".*/\1/'
 }
