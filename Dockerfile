@@ -59,4 +59,4 @@ COPY motd /etc/motd
 RUN echo '\ncat /etc/motd\n' >> /etc/bash.bashrc
 USER ethsec
 
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash"]
