@@ -8,11 +8,6 @@ WORKDIR /root
 
 # Remove the version of solc installed by Etheno
 RUN apt-get -y remove solc
-# Install all versions of solc
-COPY install_solc.sh /
-RUN bash /install_solc.sh && rm /install_solc.sh
-# Install the solc-selection script:
-COPY solc-select /usr/bin/
 
 # Slither now requires npx
 # Also install Embark while we are at it
@@ -39,10 +34,12 @@ WORKDIR /home/ethsec
 ENV HOME="/home/ethsec"
 ENV PATH="${PATH}:${HOME}/.local/bin"
 
-# Select the latest version of solc as the default:
-RUN solc-select --list | tail -n1 | xargs solc-select
-
 RUN mv examples etheno-examples
+
+# Install all and select the latest version of solc as the default
+# SOLC_VERSION is defined to a valid version to avoid a warning message on the output
+RUN pip3 --no-cache-dir install solc-select
+RUN solc-select install all && SOLC_VERSION=0.8.0 solc-select versions | head -n1 | xargs solc-select use
 
 RUN pip3 --no-cache-dir install slither-analyzer pyevmasm
 RUN pip3 --no-cache-dir install --upgrade manticore
