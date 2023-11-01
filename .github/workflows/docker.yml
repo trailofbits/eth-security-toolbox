@@ -8,8 +8,9 @@ on:
     tags:
       - "*"
   schedule:
+    - cron: "0 19 * * 3"
     # Mondays 4AM UTC
-    - cron: "0 4 * * 1"
+    #- cron: "0 4 * * 1"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -40,7 +41,7 @@ jobs:
             name=trailofbits/eth-security-toolbox,enable=${{ github.repository == 'trailofbits/eth-security-toolbox' }}
           tags: |
             type=schedule
-            type=schedule,pattern={{date 'YYYYMMDD'}}
+            type=schedule,pattern=nightly-{{date 'YYYYMMDD'}}
             type=ref,event=tag
             type=ref,event=branch,prefix=testing-
             type=edge

@@ -22,8 +22,8 @@ Other useful tools developed by third-parties are also included:
 Use our prebuilt Docker container to quickly install and run the toolkit:
 
 ```shell
-docker pull ghcr.io/trailofbits/eth-security-toolbox
-docker run -it ghcr.io/trailofbits/eth-security-toolbox
+docker pull ghcr.io/trailofbits/eth-security-toolbox:nightly
+docker run -it ghcr.io/trailofbits/eth-security-toolbox:nightly
 ```
 
 Alternatively, build the image from scratch:
@@ -39,7 +39,7 @@ docker build -t eth-security-toolbox .
 Simply start an instance of the Docker container:
 
 ```shell
-docker run -it ghcr.io/trailofbits/eth-security-toolbox
+docker run -it ghcr.io/trailofbits/eth-security-toolbox:nightly
 ```
 
 Several Solidity versions are preinstalled via `solc-select`. By default, `solc`
@@ -75,7 +75,7 @@ solc, the solidity compiler commandline interface
 Version: 0.8.0+commit.c7dfd78e.Linux.g++
 ```
 
-The toolbox comes preinstalled with a LTS version of NodeJS, and
+The toolbox comes preinstalled with a LTS version of Node, and
 [n](https://github.com/tj/n), the Node version manager. You can install other
 versions of Node if needed by using `n`. Refer to their website for further
 instructions.
