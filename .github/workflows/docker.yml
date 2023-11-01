@@ -8,9 +8,8 @@ on:
     tags:
       - "*"
   schedule:
-    - cron: "0 19 * * 3"
-    # Mondays 4AM UTC
-    #- cron: "0 4 * * 1"
+    # Mondays 4:14AM UTC
+    - cron: "14 4 * * 1"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
