@@ -92,7 +92,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/ded0317584bd
     foundryup && \
     COMPLETIONS="${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion/completions" && \
     mkdir -p "${COMPLETIONS}" && \
-    for tool in anvil cast chisel forge; do \
+    for tool in anvil cast forge; do \
         "$tool" completions bash > "${COMPLETIONS}/$tool"; \
     done
 
