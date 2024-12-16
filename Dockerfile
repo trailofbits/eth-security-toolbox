@@ -135,7 +135,7 @@ RUN echo '\ncat /etc/motd\n' >> ~/.bashrc
 FROM toolbox-base AS toolbox-ci
 
 ENV HOME="/root"
-ENV PATH="${PATH}:${HOME}/.local/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
+ENV PATH="${PATH}:${HOME}/.crytic/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
 
 # Install vyper compiler
 RUN python3 -m venv ${HOME}/.vyper && \
@@ -152,7 +152,9 @@ RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905
     foundryup
 
 # Install python tools
-RUN pip3 install --no-cache-dir --user \
-    solc-select \
-    crytic-compile \
-    slither-analyzer
+RUN python3 -m venv ${HOME}/.crytic && \
+    ${HOME}/.crytic/bin/pip3 install --no-cache-dir \
+        solc-select \
+        crytic-compile \
+        slither-analyzer && \
+    echo '\nexport PATH=${PATH}:${HOME}/.crytic/bin' >> ~/.bashrc
