@@ -32,6 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     bash-completion \
     curl \
     git \
+    jq \
     python3-dev \
     python3-pip \
     python3-venv \
@@ -49,8 +50,8 @@ RUN if [ ! "$(uname -m)" = "x86_64" ]; then \
     && rm -rf /var/lib/apt/lists/*; fi
 
 # Add n (node version manager), lts node, npm, and yarn
-RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v9.2.0/bin/n -o n && \
-    if [ ! "ab1292c18efdac7b6b673949deeee3654b267518dea32569caf2eeb0ee0c69d5  n" = "$(sha256sum n)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
+    if [ ! "a09599719bd38af5054f87b8f8d3e45150f00b7b5675323aa36b36d324d087b9  n" = "$(sha256sum n)" ]; then \
         echo "N installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
