@@ -32,6 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     bash-completion \
     curl \
     git \
+    jq \
     python3-dev \
     python3-pip \
     python3-venv \
@@ -49,8 +50,8 @@ RUN if [ ! "$(uname -m)" = "x86_64" ]; then \
     && rm -rf /var/lib/apt/lists/*; fi
 
 # Add n (node version manager), lts node, npm, and yarn
-RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v9.2.0/bin/n -o n && \
-    if [ ! "ab1292c18efdac7b6b673949deeee3654b267518dea32569caf2eeb0ee0c69d5  n" = "$(sha256sum n)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
+    if [ ! "a09599719bd38af5054f87b8f8d3e45150f00b7b5675323aa36b36d324d087b9  n" = "$(sha256sum n)" ]; then \
         echo "N installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
@@ -83,8 +84,8 @@ RUN python3 -m venv ${HOME}/.vyper && \
     echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
 
 # Install foundry
-RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/ded0317584bd835e79f2573e56c0043ab548da04/foundryup/install -o install && \
-    if [ ! "5d67b82c1319b26f19d496f8602edf0dd62da7cf41c219bc38cf3f6dd5f9c86b  install" = "$(sha256sum install)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
+    if [ ! "e4456a15d43054b537b329f6ca6d00962242050d24de4c59657a44bc17ad8a0c  install" = "$(sha256sum install)" ]; then \
         echo "Foundry installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
