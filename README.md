@@ -91,6 +91,21 @@ $ node --version
 v14.21.3
 ```
 
+## Usage in CI
+
+A variant of the image is published on GitHub Container Registry as
+[`ghcr.io/trailofbits/eth-security-toolbox/ci`](https://github.com/trailofbits/eth-security-toolbox/pkgs/container/eth-security-toolbox%2Fci).
+This variant is meant to be slightly lighter, and better suited for its use in
+CI contexts such as [GitHub workflow jobs](https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container).
+
+The main differences are:
+ * The container does not have a dedicated non-root user. All tools are
+   installed under the root user.
+ * Most autocompletions are not installed.
+ * No solc binaries are preinstalled. You may continue to use `solc-select` to
+   install any binaries you may need.
+ * pyevmasm and the building secure contracts repository are not included.
+
 ## Getting Help
 
 Feel free to stop by our [Slack channel](https://slack.empirehacking.nyc/) for

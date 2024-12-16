@@ -31,13 +31,26 @@ jobs:
         with:
           install: true
 
-      - name: Set Docker metadata
+      - name: Set Docker metadata (interactive variant)
         id: metadata
         uses: docker/metadata-action@v5
         with:
           images: |
             ghcr.io/${{ github.repository }}
             name=trailofbits/eth-security-toolbox,enable=${{ github.repository == 'trailofbits/eth-security-toolbox' }}
+          tags: |
+            type=schedule
+            type=schedule,pattern=nightly-{{date 'YYYYMMDD'}}
+            type=ref,event=tag
+            type=ref,event=branch,prefix=testing-
+            type=edge
+
+      - name: Set Docker metadata (CI variant)
+        id: metadata-ci
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}/ci
           tags: |
             type=schedule
             type=schedule,pattern=nightly-{{date 'YYYYMMDD'}}
@@ -59,7 +72,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Docker Build and Push
+      - name: Docker Build and Push (interactive variant)
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64/v8
@@ -69,5 +82,18 @@ jobs:
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: ${{ (github.event_name != 'schedule' && 'type=gha') || '' }}
+          cache-to: type=gha,mode=max
+
+      - name: Docker Build and Push (CI variant)
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64
+          target: toolbox-ci
+          file: Dockerfile
+          pull: true
+          push: true
+          tags: ${{ steps.metadata-ci.outputs.tags }}
+          labels: ${{ steps.metadata-ci.outputs.labels }}
           cache-from: ${{ (github.event_name != 'schedule' && 'type=gha') || '' }}
           cache-to: type=gha,mode=max
