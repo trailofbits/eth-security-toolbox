@@ -57,7 +57,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
     fi && \
     cat n | bash -s lts && rm n && \
     npm install -g n yarn && \
-    n stable && n prune && npm --force cache clean
+    n stable --cleanup && n prune && npm --force cache clean
 
 # Include echidna
 COPY --chown=root:root --from=echidna /usr/local/bin/echidna /usr/local/bin/echidna
