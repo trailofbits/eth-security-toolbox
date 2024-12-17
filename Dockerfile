@@ -40,14 +40,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# improve compatibility with amd64 solc in non-amd64 environments (e.g. Docker Desktop on M1 Mac)
-ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
-RUN if [ ! "$(uname -m)" = "x86_64" ]; then \
-    export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends libc6-amd64-cross \
-    && rm -rf /var/lib/apt/lists/*; fi
-
 # Add n (node version manager), lts node, npm, and yarn
 RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
     if [ ! "a09599719bd38af5054f87b8f8d3e45150f00b7b5675323aa36b36d324d087b9  n" = "$(sha256sum n)" ]; then \
@@ -72,6 +64,14 @@ CMD ["/bin/bash"]
 ### ETH Security Toolbox - interactive variant
 ###
 FROM toolbox-base AS toolbox
+
+# improve compatibility with amd64 solc in non-amd64 environments (e.g. Docker Desktop on M1 Mac)
+ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
+RUN if [ ! "$(uname -m)" = "x86_64" ]; then \
+    export DEBIAN_FRONTEND=noninteractive \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends libc6-amd64-cross \
+    && rm -rf /var/lib/apt/lists/*; fi
 
 # Add a user with passwordless sudo
 RUN useradd -m ethsec && \
