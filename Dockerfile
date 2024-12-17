@@ -33,7 +33,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     curl \
     git \
     jq \
-    python3-dev \
     python3-pip \
     python3-venv \
     sudo \
