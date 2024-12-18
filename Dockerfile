@@ -23,9 +23,9 @@ RUN chmod 755 /usr/local/bin/echidna
 
 
 ###
-### ETH Security Toolbox
+### ETH Security Toolbox - base
 ###
-FROM ubuntu:jammy AS toolbox
+FROM ubuntu:jammy AS toolbox-base
 
 # Add common tools
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -33,21 +33,12 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     curl \
     git \
     jq \
-    python3-dev \
     python3-pip \
     python3-venv \
     sudo \
     unzip \
     wget \
     && rm -rf /var/lib/apt/lists/*
-
-# improve compatibility with amd64 solc in non-amd64 environments (e.g. Docker Desktop on M1 Mac)
-ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
-RUN if [ ! "$(uname -m)" = "x86_64" ]; then \
-    export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends libc6-amd64-cross \
-    && rm -rf /var/lib/apt/lists/*; fi
 
 # Add n (node version manager), lts node, npm, and yarn
 RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
@@ -57,7 +48,7 @@ RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
     fi && \
     cat n | bash -s lts && rm n && \
     npm install -g n yarn && \
-    n stable && n prune && npm --force cache clean
+    n stable --cleanup && n prune && npm --force cache clean
 
 # Include echidna
 COPY --chown=root:root --from=echidna /usr/local/bin/echidna /usr/local/bin/echidna
@@ -65,6 +56,22 @@ COPY --chown=root:root --from=echidna /usr/local/bin/echidna /usr/local/bin/echi
 # Include medusa
 COPY --chown=root:root --from=medusa /usr/local/bin/medusa /usr/local/bin/medusa
 RUN medusa completion bash > /etc/bash_completion.d/medusa
+
+CMD ["/bin/bash"]
+
+
+###
+### ETH Security Toolbox - interactive variant
+###
+FROM toolbox-base AS toolbox
+
+# improve compatibility with amd64 solc in non-amd64 environments (e.g. Docker Desktop on M1 Mac)
+ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
+RUN if [ ! "$(uname -m)" = "x86_64" ]; then \
+    export DEBIAN_FRONTEND=noninteractive \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends libc6-amd64-cross \
+    && rm -rf /var/lib/apt/lists/*; fi
 
 # Add a user with passwordless sudo
 RUN useradd -m ethsec && \
@@ -114,4 +121,39 @@ RUN git clone --depth 1 https://github.com/crytic/building-secure-contracts.git
 COPY --link --chown=root:root motd /etc/motd
 RUN echo '\ncat /etc/motd\n' >> ~/.bashrc
 
-CMD ["/bin/bash"]
+
+###
+### ETH Security Toolbox - CI variant
+### Differences:
+###   * Runs as root
+###   * No Foundry autocompletions
+###   * No pyevmasm
+###   * No preinstalled solc binaries
+###   * No BSC copy
+###
+FROM toolbox-base AS toolbox-ci
+
+ENV HOME="/root"
+ENV PATH="${PATH}:${HOME}/.crytic/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
+
+# Install vyper compiler
+RUN python3 -m venv ${HOME}/.vyper && \
+    ${HOME}/.vyper/bin/pip3 install --no-cache-dir vyper && \
+    echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
+
+# Install foundry
+RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
+    if [ ! "e4456a15d43054b537b329f6ca6d00962242050d24de4c59657a44bc17ad8a0c  install" = "$(sha256sum install)" ]; then \
+        echo "Foundry installer does not match expected checksum! exiting"; \
+        exit 1; \
+    fi && \
+    cat install | SHELL=/bin/bash bash && rm install && \
+    foundryup
+
+# Install python tools
+RUN python3 -m venv ${HOME}/.crytic && \
+    ${HOME}/.crytic/bin/pip3 install --no-cache-dir \
+        solc-select \
+        crytic-compile \
+        slither-analyzer && \
+    echo '\nexport PATH=${PATH}:${HOME}/.crytic/bin' >> ~/.bashrc
