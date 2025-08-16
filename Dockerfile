@@ -16,9 +16,8 @@ RUN cd medusa && \
 
 ###
 ### Echidna "build process"
-### TODO: replace this with a aarch64-friendly solution
 ###
-FROM --platform=linux/amd64 ghcr.io/crytic/echidna/echidna:latest AS echidna
+FROM ghcr.io/crytic/echidna/echidna:latest AS echidna
 RUN chmod 755 /usr/local/bin/echidna
 
 
