@@ -9,7 +9,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /src
 RUN git clone https://github.com/crytic/medusa.git
 WORKDIR /src/medusa
-RUN export LATEST_TAG="$(git describe --tags | sed 's/-[0-9]\+-g\w\+$//')" && \
+RUN LATEST_TAG="$(git describe --tags | sed 's/-[0-9]\+-g\w\+$//')" && \
+    export LATEST_TAG && \
     git checkout "$LATEST_TAG" && \
     go build -trimpath -o=/usr/local/bin/medusa -ldflags="-s -w" && \
     chmod 755 /usr/local/bin/medusa
@@ -91,7 +92,7 @@ ENV PATH="${PATH}:${HOME}/.local/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
 # Install vyper compiler
 RUN python3 -m venv ${HOME}/.vyper && \
     ${HOME}/.vyper/bin/pip3 install --no-cache-dir vyper && \
-    echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
+    printf '\nexport PATH=${PATH}:${HOME}/.vyper/bin\n' >> ~/.bashrc
 
 # Install foundry
 RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
@@ -122,7 +123,7 @@ RUN git clone --depth 1 https://github.com/crytic/building-secure-contracts.git
 
 # Configure MOTD
 COPY --link --chown=root:root motd /etc/motd
-RUN echo '\ncat /etc/motd\n' >> ~/.bashrc
+RUN printf '\ncat /etc/motd\n' >> ~/.bashrc
 
 
 ###
@@ -143,7 +144,7 @@ ENV PATH="${PATH}:${HOME}/.crytic/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
 # Install vyper compiler
 RUN python3 -m venv ${HOME}/.vyper && \
     ${HOME}/.vyper/bin/pip3 install --no-cache-dir vyper && \
-    echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
+    printf '\nexport PATH=${PATH}:${HOME}/.vyper/bin\n' >> ~/.bashrc
 
 # Install foundry
 RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
@@ -160,4 +161,4 @@ RUN python3 -m venv ${HOME}/.crytic && \
         solc-select \
         crytic-compile \
         slither-analyzer && \
-    echo '\nexport PATH=${PATH}:${HOME}/.crytic/bin' >> ~/.bashrc
+    printf '\nexport PATH=${PATH}:${HOME}/.crytic/bin\n' >> ~/.bashrc
