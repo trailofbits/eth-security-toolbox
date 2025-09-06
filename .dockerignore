@@ -1,0 +1,20 @@
+# Git files
+.git
+.gitignore
+
+# GitHub files
+.github
+
+# Documentation
+*.md
+LICENSE
+CODEOWNERS
+
+# Build artifacts
+*.log
+*.tmp
+.DS_Store
+
+# Docker test builds
+Dockerfile.*
+docker-compose*.yml
