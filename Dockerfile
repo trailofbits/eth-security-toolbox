@@ -3,7 +3,7 @@
 ###
 ### Medusa build process
 ###
-FROM golang:1.23 AS medusa
+FROM golang:1.25 AS medusa
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /src
