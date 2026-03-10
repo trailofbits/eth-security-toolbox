@@ -3,7 +3,7 @@
 ###
 ### Medusa build process
 ###
-FROM golang:1.25 AS medusa
+FROM golang:1.26 AS medusa
 
 WORKDIR /src
 RUN git clone https://github.com/crytic/medusa.git
