@@ -4,11 +4,13 @@
 ### Medusa build process
 ###
 FROM golang:1.25 AS medusa
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /src
 RUN git clone https://github.com/crytic/medusa.git
-RUN cd medusa && \
-    export LATEST_TAG="$(git describe --tags | sed 's/-[0-9]\+-g\w\+$//')" && \
+WORKDIR /src/medusa
+RUN LATEST_TAG="$(git describe --tags | sed 's/-[0-9]\+-g\w\+$//')" && \
+    export LATEST_TAG && \
     git checkout "$LATEST_TAG" && \
     go build -trimpath -o=/usr/local/bin/medusa -ldflags="-s -w" && \
     chmod 755 /usr/local/bin/medusa
@@ -18,6 +20,7 @@ RUN cd medusa && \
 ### Echidna "build process"
 ###
 FROM ghcr.io/crytic/echidna/echidna:latest AS echidna
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN chmod 755 /usr/local/bin/echidna
 
 
@@ -25,6 +28,7 @@ RUN chmod 755 /usr/local/bin/echidna
 ### ETH Security Toolbox - base
 ###
 FROM ubuntu:jammy AS toolbox-base
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Add common tools
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -63,6 +67,7 @@ CMD ["/bin/bash"]
 ### ETH Security Toolbox - interactive variant
 ###
 FROM toolbox-base AS toolbox
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # improve compatibility with amd64 solc in non-amd64 environments (e.g. Docker Desktop on M1 Mac)
 ENV QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
@@ -87,7 +92,7 @@ ENV PATH="${PATH}:${HOME}/.local/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
 # Install vyper compiler
 RUN python3 -m venv ${HOME}/.vyper && \
     ${HOME}/.vyper/bin/pip3 install --no-cache-dir vyper && \
-    echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
+    printf '\nexport PATH=${PATH}:${HOME}/.vyper/bin\n' >> ~/.bashrc
 
 # Install foundry
 RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
@@ -118,7 +123,7 @@ RUN git clone --depth 1 https://github.com/crytic/building-secure-contracts.git
 
 # Configure MOTD
 COPY --link --chown=root:root motd /etc/motd
-RUN echo '\ncat /etc/motd\n' >> ~/.bashrc
+RUN printf '\ncat /etc/motd\n' >> ~/.bashrc
 
 
 ###
@@ -131,6 +136,7 @@ RUN echo '\ncat /etc/motd\n' >> ~/.bashrc
 ###   * No BSC copy
 ###
 FROM toolbox-base AS toolbox-ci
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV HOME="/root"
 ENV PATH="${PATH}:${HOME}/.crytic/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
@@ -138,7 +144,7 @@ ENV PATH="${PATH}:${HOME}/.crytic/bin:${HOME}/.vyper/bin:${HOME}/.foundry/bin"
 # Install vyper compiler
 RUN python3 -m venv ${HOME}/.vyper && \
     ${HOME}/.vyper/bin/pip3 install --no-cache-dir vyper && \
-    echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
+    printf '\nexport PATH=${PATH}:${HOME}/.vyper/bin\n' >> ~/.bashrc
 
 # Install foundry
 RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
@@ -155,4 +161,4 @@ RUN python3 -m venv ${HOME}/.crytic && \
         solc-select \
         crytic-compile \
         slither-analyzer && \
-    echo '\nexport PATH=${PATH}:${HOME}/.crytic/bin' >> ~/.bashrc
+    printf '\nexport PATH=${PATH}:${HOME}/.crytic/bin\n' >> ~/.bashrc
