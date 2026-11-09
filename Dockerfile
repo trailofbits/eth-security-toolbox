@@ -91,8 +91,8 @@ RUN python3 -m venv ${HOME}/.vyper && \
     echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
 
 # Install foundry
-RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
-    if [ ! "e4456a15d43054b537b329f6ca6d00962242050d24de4c59657a44bc17ad8a0c  install" = "$(sha256sum install)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundryup/ecc549d64cf908784f252629885bc84d345932b5/foundryup-init.sh -o install && \
+    if [ ! "5a8990dff59498a094cb3562ed4be917b3000f32781b50c2b60b399b4ea37dd7  install" = "$(sha256sum install)" ]; then \
         echo "Foundry installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
@@ -142,8 +142,8 @@ RUN python3 -m venv ${HOME}/.vyper && \
     echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
 
 # Install foundry
-RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
-    if [ ! "e4456a15d43054b537b329f6ca6d00962242050d24de4c59657a44bc17ad8a0c  install" = "$(sha256sum install)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundryup/ecc549d64cf908784f252629885bc84d345932b5/foundryup-init.sh -o install && \
+    if [ ! "5a8990dff59498a094cb3562ed4be917b3000f32781b50c2b60b399b4ea37dd7  install" = "$(sha256sum install)" ]; then \
         echo "Foundry installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
