@@ -32,6 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     curl \
     git \
     jq \
+    libatomic1 \
     python3-pip \
     python3-venv \
     sudo \
