@@ -3,7 +3,7 @@
 ###
 ### Medusa build process
 ###
-FROM golang:1.25 AS medusa
+FROM golang:1.27 AS medusa
 
 WORKDIR /src
 RUN git clone https://github.com/crytic/medusa.git
@@ -32,6 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     curl \
     git \
     jq \
+    libatomic1 \
     python3-pip \
     python3-venv \
     sudo \
@@ -40,8 +41,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     && rm -rf /var/lib/apt/lists/*
 
 # Add n (node version manager), lts node, npm, and yarn
-RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
-    if [ ! "a09599719bd38af5054f87b8f8d3e45150f00b7b5675323aa36b36d324d087b9  n" = "$(sha256sum n)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v11.0.0/bin/n -o n && \
+    if [ ! "01b945705082179c7786175555d3b8fa0908ede6feb92353837a6bf7ca4c73df  n" = "$(sha256sum n)" ]; then \
         echo "N installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
@@ -90,8 +91,8 @@ RUN python3 -m venv ${HOME}/.vyper && \
     echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
 
 # Install foundry
-RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
-    if [ ! "e4456a15d43054b537b329f6ca6d00962242050d24de4c59657a44bc17ad8a0c  install" = "$(sha256sum install)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundryup/ecc549d64cf908784f252629885bc84d345932b5/foundryup-init.sh -o install && \
+    if [ ! "5a8990dff59498a094cb3562ed4be917b3000f32781b50c2b60b399b4ea37dd7  install" = "$(sha256sum install)" ]; then \
         echo "Foundry installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
@@ -141,8 +142,8 @@ RUN python3 -m venv ${HOME}/.vyper && \
     echo '\nexport PATH=${PATH}:${HOME}/.vyper/bin' >> ~/.bashrc
 
 # Install foundry
-RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundry/27cabbd6c905b1273a5ed3ba7c10acce90833d76/foundryup/install -o install && \
-    if [ ! "e4456a15d43054b537b329f6ca6d00962242050d24de4c59657a44bc17ad8a0c  install" = "$(sha256sum install)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/foundry-rs/foundryup/ecc549d64cf908784f252629885bc84d345932b5/foundryup-init.sh -o install && \
+    if [ ! "5a8990dff59498a094cb3562ed4be917b3000f32781b50c2b60b399b4ea37dd7  install" = "$(sha256sum install)" ]; then \
         echo "Foundry installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
