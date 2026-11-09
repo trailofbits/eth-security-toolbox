@@ -40,8 +40,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     && rm -rf /var/lib/apt/lists/*
 
 # Add n (node version manager), lts node, npm, and yarn
-RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v10.1.0/bin/n -o n && \
-    if [ ! "a09599719bd38af5054f87b8f8d3e45150f00b7b5675323aa36b36d324d087b9  n" = "$(sha256sum n)" ]; then \
+RUN curl -fsSL https://raw.githubusercontent.com/tj/n/v11.0.0/bin/n -o n && \
+    if [ ! "01b945705082179c7786175555d3b8fa0908ede6feb92353837a6bf7ca4c73df  n" = "$(sha256sum n)" ]; then \
         echo "N installer does not match expected checksum! exiting"; \
         exit 1; \
     fi && \
